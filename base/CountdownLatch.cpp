@@ -4,7 +4,7 @@
 
 #include "CountdownLatch.h"
 
-namespace ynet{
+namespace ybase{
 CountdownLatch::CountdownLatch(int count)
 :m_count(count)
 {
@@ -20,7 +20,9 @@ void CountdownLatch::wait() {
 
 void CountdownLatch::countDown() {
     std::unique_lock<std::mutex> lock(m_mtx);
-    --m_count;
+    if(--m_count == 0){
+        m_cond.notify_all();
+    }
 }
 
 int CountdownLatch::getCount() const {

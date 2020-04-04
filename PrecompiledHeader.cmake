@@ -24,7 +24,7 @@
 #     more than a single target in the same directory (No way to set
 #     the source file properties differently for each target).
 #
-#   * MSVC: A source file with the same name as the header must exist
+#   * MSVC: A source file with the same getName as the header must exist
 #     and be included in the target (E.g. header.cpp). Name of file
 #     can be changed using the SOURCE_CXX/SOURCE_C options.
 #

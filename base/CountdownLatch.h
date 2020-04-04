@@ -8,7 +8,7 @@
 #include <mutex>
 #include <condition_variable>
 
-namespace ynet {
+namespace ybase {
 
 class CountdownLatch {
     NonCopyable(CountdownLatch)

@@ -7,6 +7,7 @@
 
 #include <functional>
 #include <atomic>
+#include "CountdownLatch.h"
 
 namespace ybase{
 
@@ -22,11 +23,12 @@ public:
     int join();
 
     bool started() const { return m_started; }
-    pid_t tid() const { return m_tid; }
-    const std::string& name() const { return m_name; }
+    pid_t getTid() const { return m_tid; }
+    const std::string& getName() const { return m_name; }
 
 private:
     void  setDefaultName();
+    static void* run(void* arg);
 
     bool        m_started;
     bool        m_joined;
@@ -35,7 +37,8 @@ private:
     ThreadFunc  m_func;
     std::string m_name;
 
-    static std::atomic<int> numCreated;
+    static std::atomic<int> numCreated; //record instances of Thread
+    CountdownLatch m_latch;
 };
 
 } //ybase

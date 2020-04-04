@@ -11,16 +11,38 @@
 namespace ybase {
 
 __thread int tls_cachedTid = 0;
-__thread char tls_tidString[32];        //tid in string
+__thread char tls_tidString[32];
 __thread int tls_tidStringLength = 6;
 __thread const char* tls_threadName = "unknown";
 
-pid_t ThreadUtils::getTid() {
+ThreadUtils::MainThreadTLSInitializer ThreadUtils::mainThreadTlsInitializer; //initialize tls of main thread
+
+ThreadUtils::MainThreadTLSInitializer::MainThreadTLSInitializer(){
+    assert(tls_cachedTid == 0);
+    tls_threadName = "mainThread";
+    ThreadUtils::getTid();
+    pthread_atfork(nullptr, nullptr, resetTLSAfterFork);
+}
+
+void ThreadUtils::MainThreadTLSInitializer::resetTLSAfterFork(){
+    tls_cachedTid = 0;
+    tls_threadName = "mainThread";
+    ThreadUtils::getTid();
+}
+
+int ThreadUtils::getTid(){
+    if(__builtin_expect((tls_cachedTid == 0), 0)){ //optimize if else
+        cacheTid();
+    }
+    return tls_cachedTid;
+}
+
+pid_t ThreadUtils::getSysTid() {
     return static_cast<pid_t>(syscall(SYS_gettid));
 }
 
 bool ThreadUtils::isMainThread() {
-    return tid() == ::getpid();
+    return getTid() == ::getpid();
 }
 
 std::string ThreadUtils::stackTrace(bool demangle) {
@@ -31,7 +53,7 @@ std::string ThreadUtils::stackTrace(bool demangle) {
     char** strings = ::backtrace_symbols(frame, max_frames);
     if(strings){
         size_t len = 256;
-        char* demangled = demangled ? static_cast<char*>(::malloc(len)) : nullptr;
+        char* demangled = demangle ? static_cast<char*>(::malloc(len)) : nullptr;
         for(int i = 1; i < nptrs; ++i){
             if(demangled){
                 char* left_par = nullptr;
