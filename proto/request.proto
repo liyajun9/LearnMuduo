@@ -1,0 +1,18 @@
+syntax = "proto3";
+
+package ynet;
+
+message QueryResults {
+    string query = 16;
+    int32 page_number = 17;
+    int32 result_per_page = 18;
+}
+
+message AnswerResults {
+    int32 page_number = 16;
+    repeated string dataValue = 17;
+}
+
+message Empty {
+    int32 id = 1;
+}

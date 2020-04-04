@@ -5,6 +5,9 @@
 #ifndef LINUXSERVER_PCH_H
 #define LINUXSERVER_PCH_H
 
+#define NonCopyable(ClassName) ClassName(const ClassName& ) = delete; \
+                                ClassName& operator =(const ClassName&) = delete;
+
 #include <iostream>
 #include <string>
 
