@@ -6,7 +6,7 @@
 #include <unistd.h>
 #include <execinfo.h>
 #include <cxxabi.h>
-#include "ThreadUtils.h"
+#include "threadUtils.h"
 
 namespace ybase {
 

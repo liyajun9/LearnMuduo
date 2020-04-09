@@ -4,7 +4,7 @@ project(LinuxServer)
 
 set(CMAKE_CXX_STANDARD 11)
 
-add_executable(LinuxServer main.cpp pch.cpp EchoServer/EchoServer.cpp EchoServer/EchoServer.h net/Buffer.cpp net/Buffer.h proto/request.pb.h proto/request.pb.cc net/endian.h net/EventLoop.cpp net/EventLoop.h base/Thread.cpp base/Thread.h base/CountdownLatch.cpp base/CountdownLatch.h base/ThreadUtils.cpp base/ThreadUtils.h test/ThreadUtilsTest.cpp base/Exception.cpp base/Exception.h test/ThreadTest.cpp)
+add_executable(LinuxServer main.cpp pch.cpp EchoServer/EchoServer.cpp EchoServer/EchoServer.h net/buffer.cpp net/buffer.h proto/request.pb.h proto/request.pb.cc net/endian.h net/eventLoop.cpp net/eventLoop.h base/thread.cpp base/thread.h base/countdownLatch.cpp base/countdownLatch.h base/threadUtils.cpp base/threadUtils.h test/threadUtilsTest.cpp base/exception.cpp base/exception.h test/threadTest.cpp)
 
 add_precompiled_header(LinuxServer pch.h FORCEINCLUDE)
 

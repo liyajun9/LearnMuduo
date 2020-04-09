@@ -2,7 +2,7 @@
 // Created by ralph on 4/4/20.
 //
 #include <gtest/gtest.h>
-#include "../base/ThreadUtils.h"
+#include "../base/threadUtils.h"
 
 TEST(ThreadUtilsTest, mainThreadInitializer){
     std::cout << "cachedTid: " << ybase::tls_cachedTid << std::endl;

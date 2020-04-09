@@ -2,9 +2,9 @@
 // Created by ralph on 4/3/20.
 //
 
-#include "Thread.h"
-#include "ThreadUtils.h"
-#include "Exception.h"
+#include "thread.h"
+#include "threadUtils.h"
+#include "exception.h"
 #include <cassert>
 #include <sys/prctl.h>
 

@@ -2,9 +2,9 @@
 // Created by ralph on 4/4/20.
 //
 
-#include "../base/Thread.h"
-#include "../base/ThreadUtils.h"
-#include "../base/Exception.h"
+#include "../base/thread.h"
+#include "../base/threadUtils.h"
+#include "../base/exception.h"
 #include <gtest/gtest.h>
 
 using namespace ybase;
