@@ -10,9 +10,13 @@ namespace ynet {
 class EventLoop {
     NonCopyable(EventLoop)
 
+public:
+    EventLoop();
+    ~EventLoop();
+
 private:
     bool m_looping;
-    const pid_t threadId_;
+    const pid_t m_threadId;
 };
 
 }//namepace ynet

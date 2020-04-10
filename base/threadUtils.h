@@ -11,14 +11,14 @@ namespace ybase{
 
 /* thread local storage
  * cachedTid:       thread's LWP pid
- * tidString:       cachedTid in string
- * tidStringLength: cachedTid length in string
+ * getTidString:       cachedTid in string
+ * getTidStringLength: cachedTid length in string
  * threadName:      user defined thread getName
  */
-extern __thread int tls_cachedTid;         //thread's LWP process id
-extern __thread char tls_tidString[32];    //getTid in string
-extern __thread int tls_tidStringLength;   //length of getTid in string
-extern __thread const char* tls_threadName;//thread getName
+extern thread_local int tls_cachedTid;         //thread's LWP process id
+extern thread_local char tls_tidString[32];    //getTid in string
+extern thread_local int tls_tidStringLength;   //length of getTid in string
+extern thread_local const char* tls_threadName;//thread getName
 
 class ThreadUtils {
     class MainThreadTLSInitializer{
@@ -30,15 +30,15 @@ class ThreadUtils {
 public:
     static int getTid();
 
-    static const char* tidString(){
+    static const char* getTidString(){
         return tls_tidString;
     }
 
-    static int tidStringLength(){
+    static int getTidStringLength(){
         return tls_tidStringLength;
     }
 
-    static const char* name(){
+    static const char* getThreadName(){
         return tls_threadName;
     }
 

@@ -13,7 +13,7 @@ class ThreadFixture : public ::testing::Test{
 public:
     void SetUp() override{
         auto func = [](){
-            std::cout << "start - " << ThreadUtils::name() << " : " << ThreadUtils::getTid() << std::endl;
+            std::cout << "start - " << ThreadUtils::getThreadName() << " : " << ThreadUtils::getTid() << std::endl;
         };
         for(int i = 0; i < 10; ++i){
             std::unique_ptr<Thread> up(new Thread(func));

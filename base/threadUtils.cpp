@@ -10,10 +10,10 @@
 
 namespace ybase {
 
-__thread int tls_cachedTid = 0;
-__thread char tls_tidString[32];
-__thread int tls_tidStringLength = 6;
-__thread const char* tls_threadName = "unknown";
+thread_local int tls_cachedTid = 0;
+thread_local char tls_tidString[32];
+thread_local int tls_tidStringLength = 6;
+thread_local const char* tls_threadName = "unknown";
 
 ThreadUtils::MainThreadTLSInitializer ThreadUtils::mainThreadTlsInitializer; //initialize tls of main thread
 

@@ -11,4 +11,5 @@
 #include <iostream>
 #include <string>
 
+#define LOGTO_STDOUT
 #endif //LINUXSERVER_PCH_H
