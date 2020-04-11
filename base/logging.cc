@@ -22,7 +22,7 @@ const char* strerror_tl(int savedErrno)
   return strerror_r(savedErrno, tls_errnoString, sizeof tls_errnoString);
 }
 
-Logger::LogLevel g_logLevel = Logger::INFO;
+Logger::LogLevel g_logLevel = Logger::TRACE;
 
 const char* LogLevelName[Logger::NUM_LOG_LEVELS] =
 {
