@@ -13,7 +13,7 @@ TimerQueue::TimerQueue(EventLoop *loop)
 : m_loop(loop)
 , m_timerfd(createTimerfd())
 , m_timerfdChannel(loop, m_timerfd){
-
+    m_timerfdChannel.setReadCallback();
 }
 
 TimerQueue::~TimerQueue() {
