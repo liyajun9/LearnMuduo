@@ -5,7 +5,7 @@
 #include "timer.h"
 
 namespace ynet{
-std::atomic<int64_t> Timer::s_numCreated(0);
+std::atomic<uint64_t> Timer::s_numCreated(0);
 
 Timer::Timer(TimerCallback cb, ybase::Timestamp when, double interval)
 : m_callback(cb)

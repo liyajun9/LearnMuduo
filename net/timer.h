@@ -37,7 +37,7 @@ private:
 
     ybase::Timestamp m_expiration;
 
-    static std::atomic<int64_t> s_numCreated;
+    static std::atomic<uint64_t> s_numCreated;
 
 };
 
