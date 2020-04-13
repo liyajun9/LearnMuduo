@@ -27,7 +27,7 @@ public:
     explicit TimerQueue(EventLoop* loop);
     ~TimerQueue();
 
-    TimerId addTimer(Timer::TimerCallback& cb, ybase::Timestamp when, double interval);
+    TimerId addTimer(TimerCallback& cb, ybase::Timestamp when, double interval);
     void cancelTimer(int64_t timerSequence);
 
     void addTimerInLoop(Timer *timer);
@@ -39,7 +39,6 @@ private:
     void reset(std::vector<Entry>& expired, ybase::Timestamp now); //reset repeat expired timers, update timerfd according to nearest expiration
     bool insert(Timer *timer); //insert into timerList, return whether it is the earliest timer to be expired
 
-    static int createTimerfd();
     static struct timespec howMuchTimeFromNow(ybase::Timestamp when);
     static void readTimerfd(int timerfd, ybase::Timestamp now);
     static void resetTimerfd(int timerfd, ybase::Timestamp expiration);

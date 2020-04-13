@@ -11,10 +11,9 @@
 
 namespace ynet {
 
+using TimerCallback = std::function<void()>;
 class Timer {
 NonCopyable(Timer)
-public:
-    using TimerCallback = std::function<void()>;
 
 public:
     Timer(TimerCallback cb, ybase::Timestamp when, double interval);

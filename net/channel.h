@@ -26,13 +26,14 @@ public:
 
     void handleEvents();
 
-    void updateChannel();
-
+    //any operation on events will invoke updateChannel to add channel to poll_fd
     void enableRead() { m_events |= ReadEvent; updateChannel(); }
     void enableWrite() { m_events |= WriteEvent; updateChannel(); }
     void disableRead() { m_events &= ~ReadEvent;  updateChannel(); }
     void disableWrite() { m_events &= ~WriteEvent; updateChannel(); }
     void disableAll() { m_events = NoneEvent; updateChannel(); }
+
+    void updateChannel();
 
     void setReadCallback(const ReadCallback& readCb) { m_readCb = readCb; }
     void setWriteCallback(const WriteCallback& writeCb) { m_writeCb = writeCb; }

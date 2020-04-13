@@ -8,13 +8,14 @@
 #include <algorithm>
 #include <search.h>
 #include "eventLoop.h"
+#include "../base/systemUtils.h"
 
 namespace ynet{
 
 
 TimerQueue::TimerQueue(EventLoop *loop)
 : m_loop(loop)
-, m_timerfd(createTimerfd())
+, m_timerfd(ybase::SystemUtils::createTimerfd())
 , m_timerfdChannel(loop, m_timerfd)
 , m_callingExpiredTimers(false){
     auto cb = [this](){
@@ -33,22 +34,14 @@ TimerQueue::~TimerQueue() {
         delete timer.second;
 }
 
-TimerId TimerQueue::addTimer(Timer::TimerCallback &cb, ybase::Timestamp when, double interval) {
-    std::unique_ptr<Timer> timer(new Timer(std::move(cb), when, interval));
+TimerId TimerQueue::addTimer(TimerCallback &cb, ybase::Timestamp when, double interval) {
+    Timer* timer = new Timer(std::move(cb), when, interval);
 //    m_loop->runInLoop() //To do
-    return {timer.get(), timer->getSequence()};
+    return {timer, timer->getSequence()};
 }
 
 void TimerQueue::cancelTimer(int64_t timerSequence) {
 //    m_loop->runInLoop(); //To do
-}
-
-int TimerQueue::createTimerfd() {
-    int timerfd = ::timerfd_create(CLOCK_MONOTONIC, TFD_NONBLOCK | TFD_CLOEXEC);
-    if(timerfd < 0){
-        LOG_SYSFATAL << "Failed in timerfd_create";
-    }
-    return timerfd;
 }
 
 struct timespec TimerQueue::howMuchTimeFromNow(ybase::Timestamp when) {
@@ -65,9 +58,9 @@ struct timespec TimerQueue::howMuchTimeFromNow(ybase::Timestamp when) {
 void TimerQueue::readTimerfd(int timerfd, ybase::Timestamp now) {
     uint64_t howmany;
     ssize_t n = ::read(timerfd, &howmany, sizeof(howmany));
-    LOG_TRACE << "TimerQueue::handleRead() " << howmany << " at " << now.toString();
+    LOG_TRACE << "TimerQueue::resetAsyncTaskEvent() " << howmany << " at " << now.toString();
     if(n != sizeof(howmany))
-        LOG_ERROR << "TimerQueue::handleRead() reads " << n << "bytes instead of 8";
+        LOG_ERROR << "TimerQueue::resetAsyncTaskEvent() reads " << n << "bytes instead of 8";
 }
 
 void TimerQueue::resetTimerfd(int timerfd, ybase::Timestamp expiration) {

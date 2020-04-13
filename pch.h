@@ -11,5 +11,7 @@
 #include <iostream>
 #include <string>
 
+using TimerCallback = std::function<void()>;
+
 #define LOGTO_STDOUT
 #endif //LINUXSERVER_PCH_H
