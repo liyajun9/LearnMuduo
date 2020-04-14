@@ -45,7 +45,8 @@ public:
     void postTask(AsyncTask &cb); //current thread: execute right now, other thread: adding to queue and wake up loop
 
     void quit_mt(); //quit loop, the suffix '_mt' means it's thread safe
-    void updateChannel(Channel* channel); //update channel for poll
+    void updateChannel(Channel* channel);   //update channel for poll
+    void removeChannel(Channel* channel);   //remove channel from poll
 
     bool isLooping() const { return m_looping; }
     pid_t getThreadId() const { return m_threadId; }

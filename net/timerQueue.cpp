@@ -34,14 +34,25 @@ TimerQueue::~TimerQueue() {
         delete timer.second;
 }
 
-TimerId TimerQueue::addTimer(TimerCallback &cb, ybase::Timestamp when, double interval) {
+TimerId TimerQueue::addTimer_mt(TimerCallback &cb, ybase::Timestamp when, double interval) {
     Timer* timer = new Timer(std::move(cb), when, interval);
-//    m_loop->runInLoop() //To do
+    AsyncTask task = [this, &timer]() {
+        this->addTimerInLoop(timer);
+    };
+    m_loop->postTask(task);
     return {timer, timer->getSequence()};
 }
 
 void TimerQueue::cancelTimer(int64_t timerSequence) {
 //    m_loop->runInLoop(); //To do
+}
+
+void TimerQueue::addTimerInLoop(Timer *timer) {
+    m_loop->assertInCurrentThread();
+    ybase::Timestamp expiration = timer->getExpiration();
+    bool earlistExpire = insert(timer);
+    if(earlistExpire)
+        resetTimerfd(m_timerfd, expiration);
 }
 
 struct timespec TimerQueue::howMuchTimeFromNow(ybase::Timestamp when) {
@@ -154,14 +165,6 @@ bool TimerQueue::insert(Timer *timer) {
 
     assert(m_timerList.size() == m_timerIdList.size());
     return earlistExpire;
-}
-
-void TimerQueue::addTimerInLoop(Timer *timer) {
-    m_loop->assertInCurrentThread();
-    ybase::Timestamp expiration = timer->getExpiration();
-    bool earlistExpire = insert(timer);
-    if(earlistExpire)
-        resetTimerfd(m_timerfd, expiration);
 }
 
 void TimerQueue::cancelInLoop(TimerId timerId) {

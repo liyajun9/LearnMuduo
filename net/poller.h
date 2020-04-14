@@ -24,7 +24,8 @@ public:
     ~Poller();
 
     ybase::Timestamp poll(int timeoutMs, std::vector<Channel*>& activeChannels); //activeChannels = have events occurred
-    void updateChannel(Channel* channel); //adding or modifying channel
+    void updateChannel(Channel* channel);   //adding or modifying channel
+    void removeChannel(Channel* channel);   //removing channel
 
 private:
     void fillActiveChannels(int numEvents, std::vector<Channel*>& activeChannels) const;

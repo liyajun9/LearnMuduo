@@ -32,9 +32,13 @@ ybase::Timestamp Poller::poll(int timeoutMs, std::vector<Channel *>& activeChann
     return now;
 }
 
+void Poller::removeChannel(Channel *channel) {
+
+}
+
 void Poller::updateChannel(Channel *channel) {
     assertInCurrentThread(); //avoid adding to a different EventLoop
-    LOG_TRACE << "Poller::updateChannel fd=" << channel->getFd() << " events=" << channel->getEvents();
+    LOG_TRACE << "Poller::update fd=" << channel->getFd() << " events=" << channel->getEvents();
     if(channel->getIndex() < 0){
         assert(m_channelMap.end() == m_channelMap.find(channel->getFd()));
 

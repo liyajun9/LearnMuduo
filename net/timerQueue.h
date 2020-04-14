@@ -27,13 +27,13 @@ public:
     explicit TimerQueue(EventLoop* loop);
     ~TimerQueue();
 
-    TimerId addTimer(TimerCallback& cb, ybase::Timestamp when, double interval);
+    TimerId addTimer_mt(TimerCallback& cb, ybase::Timestamp when, double interval);
     void cancelTimer(int64_t timerSequence);
 
-    void addTimerInLoop(Timer *timer);
     void cancelInLoop(TimerId timerId);
 
 private:
+    void addTimerInLoop(Timer* timer);
     void handleRead(); //run callback and reset expired timers
     std::vector<Entry> getExpired(ybase::Timestamp now); //get expired timers from m_timerList
     void reset(std::vector<Entry>& expired, ybase::Timestamp now); //reset repeat expired timers, update timerfd according to nearest expiration

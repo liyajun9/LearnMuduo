@@ -26,14 +26,14 @@ public:
 
     void handleEvents();
 
-    //any operation on events will invoke updateChannel to add channel to poll_fd
-    void enableRead() { m_events |= ReadEvent; updateChannel(); }
-    void enableWrite() { m_events |= WriteEvent; updateChannel(); }
-    void disableRead() { m_events &= ~ReadEvent;  updateChannel(); }
-    void disableWrite() { m_events &= ~WriteEvent; updateChannel(); }
-    void disableAll() { m_events = NoneEvent; updateChannel(); }
+    //any operation on events will invoke update to add channel to poll_fd
+    void enableRead() { m_events |= ReadEvent;        update(); }
+    void enableWrite() { m_events |= WriteEvent;        update(); }
+    void disableRead() { m_events &= ~ReadEvent;        update(); }
+    void disableWrite() { m_events &= ~WriteEvent;        update(); }
+    void disableAll() { m_events = NoneEvent;        update(); }
 
-    void updateChannel();
+    void remove();
 
     void setReadCallback(const ReadCallback& readCb) { m_readCb = readCb; }
     void setWriteCallback(const WriteCallback& writeCb) { m_writeCb = writeCb; }
@@ -47,6 +47,9 @@ public:
     int getEvents() const { return m_events; }
     int getIndex() const { return m_index; }
     EventLoop* getOwnerLoop() const { return m_ownerLoop; }
+
+private:
+    void update();
 
 private:
     static constexpr int NoneEvent = 0;

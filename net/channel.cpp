@@ -36,8 +36,13 @@ void Channel::handleEvents() {
     }
 }
 
-void Channel::updateChannel() {
+void Channel::update() {
     m_ownerLoop->updateChannel(this);
+}
+
+void Channel::remove() {
+    assert(isNoneEvent());
+    m_ownerLoop->removeChannel(this);
 }
 
 } //namespace ynet

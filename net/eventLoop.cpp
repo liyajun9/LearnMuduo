@@ -75,17 +75,17 @@ void EventLoop::updateChannel(Channel *channel) {
 }
 
 TimerId EventLoop::runAt(const ybase::Timestamp &time, TimerCallback &cb) {
-    return m_timerQueue->addTimer(cb, time, 0);
+    return m_timerQueue->addTimer_mt(cb, time, 0);
 }
 
 TimerId EventLoop::runAfter(double delay, TimerCallback &cb) {
     ybase::Timestamp time(addTime(ybase::Timestamp::now(), delay));
-    return m_timerQueue->addTimer(cb, time, 0);
+    return m_timerQueue->addTimer_mt(cb, time, 0);
 }
 
 TimerId EventLoop::runEvery(double interval, TimerCallback &cb) {
     ybase::Timestamp time(addTime(ybase::Timestamp::now(), interval));
-    return m_timerQueue->addTimer(cb, time, interval);
+    return m_timerQueue->addTimer_mt(cb, time, interval);
 }
 
 void EventLoop::postTask(AsyncTask &cb) {
@@ -140,6 +140,13 @@ void EventLoop::resetAsyncTaskEvent() {
     ssize_t n = SocketUtils::read(m_asyncTaskFd, &one, sizeof(one));
     if(n != sizeof(one))
         LOG_ERROR << "EventLoop::resetAsyncTaskEvent() reads " << n << " bytes instead of 8";
+}
+
+void EventLoop::removeChannel(Channel *channel) {
+    assert(channel->getOwnerLoop() == this);
+    assertInCurrentThread();
+
+    m_poller->removeChannel(channel);
 }
 
 } //namespace ynet
