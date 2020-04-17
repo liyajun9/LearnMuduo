@@ -8,10 +8,10 @@
 #include <functional>
 #include <atomic>
 #include "../base/timestamp.h"
+#include "alias.h"
 
 namespace ynet {
 
-using TimerCallback = std::function<void()>;
 class Timer {
 NonCopyable(Timer)
 

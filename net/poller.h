@@ -9,6 +9,7 @@
 #include <map>
 #include "channel.h"
 #include "../base/timestamp.h"
+#include "alias.h"
 
 namespace ynet {
 class EventLoop;
@@ -16,8 +17,6 @@ class EventLoop;
 class Poller {
 NonCopyable(Poller)
 
-public:
-    using Pollfd = struct pollfd;
 
 public:
     explicit Poller(EventLoop* loop);

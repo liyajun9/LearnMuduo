@@ -8,6 +8,7 @@
 #include <functional>
 #include <atomic>
 #include "countdownLatch.h"
+#include "alias.h"
 
 namespace ybase{
 
@@ -15,7 +16,6 @@ class Thread {
 NonCopyable(Thread)
 
 public:
-    using ThreadFunc = std::function<void()>;
     explicit Thread(ThreadFunc func, std::string name = std::string());
     ~Thread();
 

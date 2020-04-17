@@ -12,7 +12,7 @@ namespace ybase {
 
 std::atomic<int> Thread::numCreated;
 
-Thread::Thread(Thread::ThreadFunc func, std::string name)
+Thread::Thread(ThreadFunc func, std::string name)
 : m_started(false)
 , m_joined(false)
 , m_pthreadId(0)

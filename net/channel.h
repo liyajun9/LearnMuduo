@@ -7,6 +7,7 @@
 
 #include <functional>
 #include <sys/poll.h>
+#include "alias.h"
 
 namespace ynet {
     class EventLoop;
@@ -16,10 +17,6 @@ namespace ynet {
  * Lifecycle:
  */
 class Channel {
-public:
-    using ReadCallback = std::function<void()>;
-    using WriteCallback = std::function<void()>;
-    using ErrorCallback = std::function<void()>;
 
 public:
     Channel(EventLoop* loop, int fd);
@@ -35,13 +32,17 @@ public:
 
     void remove();
 
-    void setReadCallback(const ReadCallback& readCb) { m_readCb = readCb; }
-    void setWriteCallback(const WriteCallback& writeCb) { m_writeCb = writeCb; }
-    void setErrorCallback(const ErrorCallback& errorCb) { m_errorCb = errorCb; }
+    void setReadCallback(EventCallback readCb) { m_readCb = std::move(readCb); }
+    void setWriteCallback(EventCallback writeCb) { m_writeCb = std::move(writeCb); }
+    void setCloseCallback(EventCallback closeCb) { m_closeCb = std::move(closeCb); }
+    void setErrorCallback(EventCallback errorCb) { m_errorCb = std::move(errorCb); }
+
     void setCurrEvents(int currEvents) { m_currEvents = currEvents; }
     void setIndex(int index) { m_index = index; }
 
     bool isNoneEvent() const { return m_events == NoneEvent; }
+
+    void tie(const std::shared_ptr<void>& ptr);
 
     int getFd() const { return m_fd; }
     int getEvents() const { return m_events; }
@@ -61,9 +62,13 @@ private:
     int m_currEvents;
     int m_index;    //index in Poller::fdlist
 
-    ReadCallback m_readCb;
-    WriteCallback m_writeCb;
-    ErrorCallback m_errorCb;
+    EventCallback m_readCb;
+    EventCallback m_writeCb;
+    EventCallback m_closeCb;
+    EventCallback m_errorCb;
+
+    std::weak_ptr<void> m_tie; //used to extend life ot sth until handleEvents finished.(especially TcpConnection)
+    bool m_tied;
 
     EventLoop* m_ownerLoop;
 };

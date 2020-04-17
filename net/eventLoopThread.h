@@ -7,9 +7,9 @@
 
 #include "eventLoop.h"
 #include "../base/thread.h"
+#include "alias.h"
 
 namespace ynet {
-using LoopThreadInitCallback = std::function<void(EventLoop*)>;
 
 class EventLoopThread {
     NonCopyable(EventLoopThread)

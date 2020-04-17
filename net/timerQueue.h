@@ -12,17 +12,11 @@
 #include "channel.h"
 #include "timer.h"
 #include "timerId.h"
+#include "alias.h"
 
 namespace ynet {
 
 class TimerQueue {
-public:
-    using Entry = std::pair<ybase::Timestamp, Timer*>;
-    using TimerList = std::set<Entry>;
-
-    using TimerIdEntry = std::pair<Timer*, int64_t>; //raw pointers of Timer, so must operator together with TimerList.
-    using TimerIdList = std::set<TimerIdEntry>;
-
 public:
     explicit TimerQueue(EventLoop* loop);
     ~TimerQueue();
@@ -35,8 +29,8 @@ public:
 private:
     void addTimerInLoop(Timer* timer);
     void handleRead(); //run callback and reset expired timers
-    std::vector<Entry> getExpired(ybase::Timestamp now); //get expired timers from m_timerList
-    void reset(std::vector<Entry>& expired, ybase::Timestamp now); //reset repeat expired timers, update timerfd according to nearest expiration
+    std::vector<TimerEntry> getExpired(ybase::Timestamp now); //get expired timers from m_timerList
+    void reset(std::vector<TimerEntry>& expired, ybase::Timestamp now); //reset repeat expired timers, update timerfd according to nearest expiration
     bool insert(Timer *timer); //insert into timerList, return whether it is the earliest timer to be expired
 
     static struct timespec howMuchTimeFromNow(ybase::Timestamp when);
@@ -49,7 +43,7 @@ private:
     TimerList m_timerList;   //timer list sorted by expiration
 
     //for cancel
-    TimerIdList m_timerIdList;    //timerid list corresponding to timerList. It's used to get expiration so that we can construct Entry and erase it from timerList
+    TimerIdList m_timerIdList;    //timerid list corresponding to timerList. It's used to get expiration so that we can construct TimerEntry and erase it from timerList
     TimerIdList m_cancelingTimers;    //when we cancel timers that are executing callback, store it in this list and do not reset it again
     std::atomic<bool> m_callingExpiredTimers; //mark the timer that it is executing callback
 

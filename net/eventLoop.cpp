@@ -48,6 +48,7 @@ void EventLoop::loop() {
     assert(!m_looping);
     m_looping = true;
     m_quit = false;
+    LOG_TRACE << "EventLoop " << this << "start looping";
 
     while(!m_quit){
         m_activeIOChannels.clear();
@@ -88,7 +89,7 @@ TimerId EventLoop::runEvery(double interval, TimerCallback &cb) {
     return m_timerQueue->addTimer_mt(cb, time, interval);
 }
 
-void EventLoop::postTask(AsyncTask &cb) {
+void EventLoop::postTask_mt(AsyncTask &cb) {
     if(isInLoopThread())
         cb();
     else

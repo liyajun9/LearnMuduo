@@ -5,7 +5,9 @@
 #ifndef LINUXSERVER_SOCKETUTILS_H
 #define LINUXSERVER_SOCKETUTILS_H
 
-#include <bits/sockaddr.h>
+#include <sys/uio.h>
+#include <sys/socket.h>
+#include <sys/un.h>
 
 namespace ynet {
 
@@ -24,16 +26,16 @@ public:
     static void listenOrDie(int sockfd);
     static int accept(int sockfd, struct sockaddr_in6* addr);
 
-    void toIpPort(char* buf, size_t size, const struct sockaddr* addr);
-    void toIp(char* buf, size_t size, const struct sockaddr* addr);
-    void fromIpPort(const char* ip, uint16_t port, struct sockaddr_in* addr);
-    void fromIpPort(const char* ip, uint16_t port, struct sockaddr_in6* addr);
+    static void toIpPort(char* buf, size_t size, const struct sockaddr* addr);
+    static void toIp(char* buf, size_t size, const struct sockaddr* addr);
+    static void fromIpPort(const char* ip, uint16_t port, struct sockaddr_in* addr);
+    static void fromIpPort(const char* ip, uint16_t port, struct sockaddr_in6* addr);
 
-    int getSocketError(int sockfd);
-    struct sockaddr_in6 getLocalAddr(int sockfd);
-    struct sockaddr_in6 getPeerAddr(int sockfd);
+    static int getSocketError(int sockfd);
+    static struct sockaddr_in6 getLocalAddr(int sockfd);
+    static struct sockaddr_in6 getPeerAddr(int sockfd);
 
-    bool isSelfConnect(int sockfd);
+    static bool isSelfConnect(int sockfd);
 
     static const struct sockaddr* sockaddr_cast(const struct sockaddr_in* addr);
     static const struct sockaddr* sockaddr_cast(const struct sockaddr_in6* addr);

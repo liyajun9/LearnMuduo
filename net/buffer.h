@@ -39,6 +39,8 @@ public:
         assert(m_writePos < m_vec.size());
     }
 
+    ssize_t readFromFd(int fd, int* savedError);
+
     void retrieve(size_t len){
         assert(len <= readableBytes());
         if(len < readableBytes()){
@@ -54,6 +56,14 @@ public:
     }
 
 private:
+    char* begin(){
+        return &m_vec[0];
+    }
+
+    const char* begin() const{
+        return &m_vec[0];
+    }
+
     void ensureSpace(size_t len){
         if(len <= writableBytes())
             return;

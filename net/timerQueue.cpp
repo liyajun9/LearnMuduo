@@ -30,7 +30,7 @@ TimerQueue::~TimerQueue() {
 //    m_timerfdChannel.remove(); //To do
     ::close(m_timerfd);
 
-    for(const Entry& timer : m_timerList)
+    for(const TimerEntry& timer : m_timerList)
         delete timer.second;
 }
 
@@ -39,7 +39,7 @@ TimerId TimerQueue::addTimer_mt(TimerCallback &cb, ybase::Timestamp when, double
     AsyncTask task = [this, &timer]() {
         this->addTimerInLoop(timer);
     };
-    m_loop->postTask(task);
+    m_loop->postTask_mt(task);
     return {timer, timer->getSequence()};
 }
 
@@ -89,11 +89,11 @@ void TimerQueue::handleRead() {
     ybase::Timestamp now(ybase::Timestamp::now());
     readTimerfd(m_timerfd, now);
 
-    std::vector<TimerQueue::Entry> expired = getExpired(now);
+    std::vector<TimerEntry> expired = getExpired(now);
 
     m_callingExpiredTimers.store(true);
     m_cancelingTimers.clear();
-    for(const TimerQueue::Entry& entry : expired){
+    for(const TimerEntry& entry : expired){
         entry.second->run();
     }
     m_callingExpiredTimers.store(false);
@@ -101,19 +101,19 @@ void TimerQueue::handleRead() {
     reset(expired, now);
 }
 
-vector<TimerQueue::Entry> TimerQueue::getExpired(ybase::Timestamp now) {
+vector<TimerEntry> TimerQueue::getExpired(ybase::Timestamp now) {
     assert(m_timerList.size() == m_timerIdList.size());
-    std::vector<TimerQueue::Entry> expiredTimers;
+    std::vector<TimerEntry> expiredTimers;
 
     //remove expired timers from timerlist
-    TimerQueue::Entry sentry(now, nullptr);
+    TimerEntry sentry(now, nullptr);
     auto it = m_timerList.lower_bound(sentry);
     assert(it == m_timerList.end() || it->first > now); // '>' not '>=' because unique_ptr is emtpy
     std::copy(m_timerList.begin(), it, std::back_inserter(expiredTimers));
     m_timerList.erase(m_timerList.begin(), it);
 
     //remove expired timers from activeTimers
-    for(const TimerQueue::Entry& entry: expiredTimers){
+    for(const TimerEntry& entry: expiredTimers){
         TimerIdEntry timer(entry.second, entry.second->getSequence());
         size_t n = m_timerIdList.erase(timer);
         assert(n == 1);
@@ -123,10 +123,10 @@ vector<TimerQueue::Entry> TimerQueue::getExpired(ybase::Timestamp now) {
     return expiredTimers;
 }
 
-void TimerQueue::reset(std::vector<TimerQueue::Entry>& expired, ybase::Timestamp now) {
+void TimerQueue::reset(std::vector<TimerEntry>& expired, ybase::Timestamp now) {
     ybase::Timestamp nextExpiration;
 
-    for(TimerQueue::Entry& entry : expired){
+    for(TimerEntry& entry : expired){
         TimerIdEntry timer(entry.second, entry.second->getSequence());
         //restart repeat timers
         if(entry.second->getRepeat() && m_cancelingTimers.find(timer) == m_cancelingTimers.end()){
@@ -158,7 +158,7 @@ bool TimerQueue::insert(Timer *timer) {
         assert(res.second);
     }
     {
-        std::pair<TimerList::iterator, bool> res = m_timerList.insert(TimerQueue::Entry(expire, timer));
+        std::pair<TimerList::iterator, bool> res = m_timerList.insert(TimerEntry(expire, timer));
         assert(res.second);
     }
 
@@ -173,7 +173,7 @@ void TimerQueue::cancelInLoop(TimerId timerId) {
     TimerIdEntry timerIdEntry(timerId.m_timer, timerId.m_sequence);
     auto it = m_timerIdList.find(timerIdEntry);
     if(it != m_timerIdList.end()){
-        size_t n = m_timerList.erase(Entry(it->first->getExpiration(), it->first));
+        size_t n = m_timerList.erase(TimerEntry(it->first->getExpiration(), it->first));
         delete it->first;
         m_timerIdList.erase(it);
     }else if(m_callingExpiredTimers.load()){
