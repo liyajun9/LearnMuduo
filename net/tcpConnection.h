@@ -39,6 +39,9 @@ public:
     StateE getState() const { return m_state; }
 
 private:
+    /* pass to Channel::ReadEventCallback & EventCallback
+     *
+     */
     void handleRead(ybase::Timestamp recvTime);
     void handleWrite();
     void handleClose();

@@ -33,7 +33,7 @@ ybase::Timestamp Poller::poll(int timeoutMs, std::vector<Channel *>& activeChann
 }
 
 void Poller::removeChannel(Channel *channel) {
-    
+
 }
 
 void Poller::updateChannel(Channel *channel) {

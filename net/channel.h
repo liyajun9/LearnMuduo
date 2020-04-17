@@ -29,10 +29,12 @@ public:
     void disableRead() { m_events &= ~ReadEvent;        update(); }
     void disableWrite() { m_events &= ~WriteEvent;        update(); }
     void disableAll() { m_events = NoneEvent;        update(); }
+    bool isWriting() const { return m_events & WriteEvent; }
+    bool isReading() const { return m_events & ReadEvent; }
 
     void remove();
 
-    void setReadCallback(EventCallback readCb) { m_readCb = std::move(readCb); }
+    void setReadCallback(ReadEventCallback readCb) { m_readCb = std::move(readCb); }
     void setWriteCallback(EventCallback writeCb) { m_writeCb = std::move(writeCb); }
     void setCloseCallback(EventCallback closeCb) { m_closeCb = std::move(closeCb); }
     void setErrorCallback(EventCallback errorCb) { m_errorCb = std::move(errorCb); }
@@ -62,7 +64,7 @@ private:
     int m_currEvents;
     int m_index;    //index in Poller::fdlist
 
-    EventCallback m_readCb;
+    ReadEventCallback m_readCb;
     EventCallback m_writeCb;
     EventCallback m_closeCb;
     EventCallback m_errorCb;

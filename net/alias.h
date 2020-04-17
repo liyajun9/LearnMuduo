@@ -19,7 +19,7 @@ namespace ynet{
     class EventLoop;
     class Timer;
 
-        //EventLoopThread
+    //EventLoopThread
     using LoopThreadInitCallback = std::function<void(EventLoop*)>;
 
     //EventLoop
@@ -30,6 +30,7 @@ namespace ynet{
 
     //Channerl
     using EventCallback = std::function<void()>;
+    using ReadEventCallback = std::function<void(ybase::Timestamp timestamp)>;
 
     //Timer, TimerQueue
     using TimerCallback = std::function<void()>;

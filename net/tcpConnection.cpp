@@ -20,7 +20,19 @@ TcpConnection::TcpConnection(EventLoop *loop, std::string name, int sockfd, cons
 , m_channel(std::unique_ptr<Channel>(new Channel(loop, sockfd)))
 , m_localAddr(localAddr)
 , m_peerAddr(peerAddr){
-
+    m_channel->setReadCallback([this](ybase::Timestamp timestamp){
+        this->handleRead(timestamp);
+    });
+    m_channel->setWriteCallback([this](){
+        this->handleWrite();
+    });
+    m_channel->setCloseCallback([this](){
+        this->handleClose();
+    });
+    m_channel->setErrorCallback([this](){
+        this->handleError();
+    });
+    m_socket->setKeepAlive(true);
 }
 
 TcpConnection::~TcpConnection() {
@@ -51,7 +63,12 @@ void TcpConnection::handleRead(ybase::Timestamp recvTime) {
 }
 
 void TcpConnection::handleWrite() {
+    m_loop->assertInCurrentThread();
+    if(m_channel->isWriting()){ //write only when you have data to send
 
+    }else{
+        LOG_SYSERR << "Connection fd = " << m_channel->getFd() << " is down, no more writing";
+    }
 }
 
 void TcpConnection::handleClose() {
