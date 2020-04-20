@@ -28,7 +28,7 @@ public:
 
 private:
     void addTimerInLoop(Timer* timer);
-    void handleRead(); //run callback and reset expired timers
+    void handleRead(ybase::Timestamp timestamp); //run callback and reset expired timers
     std::vector<TimerEntry> getExpired(ybase::Timestamp now); //get expired timers from m_timerList
     void reset(std::vector<TimerEntry>& expired, ybase::Timestamp now); //reset repeat expired timers, update timerfd according to nearest expiration
     bool insert(Timer *timer); //insert into timerList, return whether it is the earliest timer to be expired

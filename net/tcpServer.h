@@ -7,6 +7,7 @@
 
 #include <memory>
 #include <map>
+#include <atomic>
 #include "alias.h"
 
 namespace ynet {
@@ -21,28 +22,37 @@ public:
     TcpServer(EventLoop* loop, const InetAddress& listenAddr, std::string name, bool reusePort = false);
     ~TcpServer();
 
+    void setThreadNum(int numThreads);
+
     void start();
-    void setConnUpOrDownCallback(ConnUpOrDownCallback cb) { m_connUpOrDownCb = std::move(cb); }
+    void setConnectionChangeCallback(ConnectionChangeCallback cb) { m_connectionChangeCb = std::move(cb); }
     void setMessageCallback(MessageCallback cb) { m_messageCb = std::move(cb); }
+    void setWriteCompleteCallback(WriteCompleteCallback cb) { m_writeCompleteCb = std::move(cb); }
 
 private:
-    void newConneciton(int sockfd, const InetAddress& peerAddr);
+    void newConnection(int sockFd, const InetAddress& peerAddr);
+    void removeConnection(const TcpConnectionPtr& conn);
+    void removeConnectionInLoop(const TcpConnectionPtr& conn);
 
-    static void defaultEstablishedCallback(const TcpConnectionPtr& conn);
+    static void defaultConnectionChangedCallback(const TcpConnectionPtr& conn);
     static void defaultMessageCallback(const TcpConnectionPtr& conn, Buffer* buf, ybase::Timestamp);
 
 private:
-    EventLoop* m_loop;
-    bool m_started;
+    std::atomic<bool> m_started;
     int m_nextConnId;
     const std::string m_serverName;
     const std::string m_ipPort;
 
+    EventLoop* m_loop; //only for acceptor
+    std::shared_ptr<EventLoopThreadPool> m_loopThreadPool;
+
     std::unique_ptr<Acceptor> m_acceptor;
     std::map<std::string, TcpConnectionPtr> m_connectionMap;
 
-    ConnUpOrDownCallback m_connUpOrDownCb;
+    LoopThreadInitCallback m_loopThreadInitCb;
+    ConnectionChangeCallback m_connectionChangeCb;
     MessageCallback m_messageCb;
+    WriteCompleteCallback m_writeCompleteCb;
 };
 
 } //namespace ynet

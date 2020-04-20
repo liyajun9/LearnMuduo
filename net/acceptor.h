@@ -20,7 +20,7 @@ public:
 
     void listen();
 
-    void setConnEstablishedCallback(const ConnEstablishedCallback& cb) { m_ConnEstablishedCb = cb; }
+    void setNewConnectionCallback(const NewConnectionCallback& cb) { m_NewConnectionCb = cb; } //set by owner
     bool getListening() const { return m_listening; }
 
 private:
@@ -31,7 +31,7 @@ private:
 
     Socket m_socket;
     Channel m_channel;
-    ConnEstablishedCallback m_ConnEstablishedCb;
+    NewConnectionCallback m_NewConnectionCb;
     EventLoop* m_ownerLoop;
 };
 

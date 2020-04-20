@@ -44,14 +44,14 @@ public:
      * 1.invoke from loop thread: execute task immediately
      * 2.invoke from other threads: produce event on wakeupfd
      */
-    void postTask_mt(AsyncTask &cb); //current thread: execute right now, other thread: adding to queue and wake up loop
+    void postTask_mt(AsyncTask cb); //current thread: execute right now, other thread: adding to queue and wake up loop
+    void queueTask(AsyncTask cb);
 
     bool isLooping() const { return m_looping; }
     pid_t getThreadId() const { return m_threadId; }
     void assertInCurrentThread();
 
 private:
-    void queueTask(AsyncTask &cb);
     void executeAsyncTasks();
     void setAsyncTaskEvent();       //write to m_asyncTaskFd
     void resetAsyncTaskEvent();     //read from m_asyncTaskFd
@@ -77,6 +77,11 @@ private:
     std::mutex m_mtx;
     std::vector<AsyncTask> m_asyncTaskList;
     bool m_executingAsyncTask;
+
+    //event handling statu
+    bool m_handlingEvent;               //whether is handling event
+    ybase::Timestamp m_pollReturnTime;  //time of every time event occurred
+    Channel* m_currActiveChannel;       //current active channel
 };
 
 EventLoop* getEventLoopOfCurrentThread();

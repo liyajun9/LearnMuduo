@@ -33,7 +33,29 @@ ybase::Timestamp Poller::poll(int timeoutMs, std::vector<Channel *>& activeChann
 }
 
 void Poller::removeChannel(Channel *channel) {
+    assertInCurrentThread();
+    LOG_TRACE << "fd = " << channel->getFd();
+    assert(m_channelMap.find(channel->getFd()) != m_channelMap.end());
+    assert(m_channelMap[channel->getFd()] == channel);
+    assert(channel->isNoneEvent());
 
+    int index = channel->getIndex();
+    assert(index >= 0 && index < m_pollfdList.size());
+    const struct pollfd& pfd = m_pollfdList[index];
+    assert(pfd.fd == -channel->getFd() - 1 && pfd.events == channel->getEvents());
+    size_t n = m_channelMap.erase(channel->getFd());
+    assert(n == 1); (void)n;
+
+    if(index == m_pollfdList.size() - 1){ //last element, directly remove
+        m_pollfdList.pop_back();
+    }else{ //not the last element, move it to last position, then remove
+        int fdOfLastEle = m_pollfdList[m_pollfdList.size() - 1].fd; //used to set it's index
+        std::iter_swap(m_pollfdList.begin() + index, m_pollfdList.end() - 1);
+        if(fdOfLastEle < 0)
+            fdOfLastEle = -fdOfLastEle-1;
+        m_channelMap[fdOfLastEle]->setIndex(index);
+        m_pollfdList.pop_back();
+    }
 }
 
 void Poller::updateChannel(Channel *channel) {
@@ -60,7 +82,7 @@ void Poller::updateChannel(Channel *channel) {
 
         //update pollfd to be polled
         if(channel->isNoneEvent()){
-            pollfd.fd = -1; //ignore none event channel, to avoid
+            pollfd.fd = -channel->getFd()-1; //ignore none event channel, to avoid poll. use -fd-1 to save original info.
         }
         pollfd.events = static_cast<short>(channel->getEvents());
         pollfd.revents = 0;

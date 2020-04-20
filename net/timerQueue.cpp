@@ -18,10 +18,9 @@ TimerQueue::TimerQueue(EventLoop *loop)
 , m_timerfd(ybase::SystemUtils::createTimerfd())
 , m_timerfdChannel(loop, m_timerfd)
 , m_callingExpiredTimers(false){
-    auto cb = [this](){
-        this->handleRead();
-    };
-    m_timerfdChannel.setReadCallback(cb);
+    m_timerfdChannel.setReadCallback([this](ybase::Timestamp timestamp){
+        this->handleRead(timestamp);
+    });
     m_timerfdChannel.enableRead();
 }
 
@@ -50,8 +49,8 @@ void TimerQueue::cancelTimer(int64_t timerSequence) {
 void TimerQueue::addTimerInLoop(Timer *timer) {
     m_loop->assertInCurrentThread();
     ybase::Timestamp expiration = timer->getExpiration();
-    bool earlistExpire = insert(timer);
-    if(earlistExpire)
+    bool earliestExpire = insert(timer);
+    if(earliestExpire)
         resetTimerfd(m_timerfd, expiration);
 }
 
@@ -84,12 +83,14 @@ void TimerQueue::resetTimerfd(int timerfd, ybase::Timestamp expiration) {
         LOG_SYSERR << "timerfd_settime() error";
 }
 
-void TimerQueue::handleRead() {
+void TimerQueue::handleRead(ybase::Timestamp timestamp) {
     m_loop->assertInCurrentThread();
-    ybase::Timestamp now(ybase::Timestamp::now());
-    readTimerfd(m_timerfd, now);
+//    ybase::Timestamp now(ybase::Timestamp::now());
+//    readTimerfd(m_timerfd, now);
+    readTimerfd(m_timerfd, timestamp);
 
-    std::vector<TimerEntry> expired = getExpired(now);
+//    std::vector<TimerEntry> expired = getExpired(now);
+    std::vector<TimerEntry> expired = getExpired(timestamp);
 
     m_callingExpiredTimers.store(true);
     m_cancelingTimers.clear();
@@ -98,7 +99,8 @@ void TimerQueue::handleRead() {
     }
     m_callingExpiredTimers.store(false);
 
-    reset(expired, now);
+//    reset(expired, now);
+    reset(expired, timestamp);
 }
 
 vector<TimerEntry> TimerQueue::getExpired(ybase::Timestamp now) {
@@ -149,10 +151,10 @@ void TimerQueue::reset(std::vector<TimerEntry>& expired, ybase::Timestamp now) {
 bool TimerQueue::insert(Timer *timer) {
     m_loop->assertInCurrentThread();
     assert(m_timerList.size() == m_timerIdList.size());
-    bool earlistExpire = false;
+    bool earliestExpire = false;
     ybase::Timestamp expire = timer->getExpiration();
     if(m_timerList.empty() || expire < m_timerList.begin()->first)
-        earlistExpire = true;
+        earliestExpire = true;
     {
         std::pair<TimerIdList::iterator, bool> res = m_timerIdList.insert(TimerIdEntry(timer, timer->getSequence()));
         assert(res.second);
@@ -164,7 +166,7 @@ bool TimerQueue::insert(Timer *timer) {
 
 
     assert(m_timerList.size() == m_timerIdList.size());
-    return earlistExpire;
+    return earliestExpire;
 }
 
 void TimerQueue::cancelInLoop(TimerId timerId) {

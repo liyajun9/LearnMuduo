@@ -46,10 +46,12 @@ namespace ynet{
     using TcpConnectionPtr = std::shared_ptr<TcpConnection>;
 
     //Acceptor
-    using ConnEstablishedCallback = std::function<void(int sockfd, const InetAddress&)>;
+    using NewConnectionCallback = std::function<void(int sockfd, const InetAddress&)>;
 
     //TcpConnection
-    using ConnUpOrDownCallback = std::function<void(const TcpConnectionPtr& conn)>;
+    using ConnectionChangeCallback = std::function<void(const TcpConnectionPtr& conn)>;
     using CloseCallback = std::function<void(const TcpConnectionPtr& conn)>;
     using MessageCallback = std::function<void(const TcpConnectionPtr& conn, Buffer* buf, ybase::Timestamp recvTime)>;
+    using WriteCompleteCallback = std::function<void(const TcpConnectionPtr& conn)>;
+    using HighWaterMarkCallback = std::function<void(const TcpConnectionPtr& conn, size_t n)>;
 } //namespace ynet

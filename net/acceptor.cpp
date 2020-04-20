@@ -17,7 +17,13 @@ Acceptor::Acceptor(EventLoop *loop, const InetAddress &listenAddr, bool reusePor
 , m_channel(loop, m_socket.getFd())
 , m_listening(false)
 , m_idleFd(::open("/dev/null", O_RDONLY | O_CLOEXEC)){
-
+    assert(m_idleFd >= 0);
+    m_socket.setReuseAddr(true);
+    m_socket.setReusePort(reusePort);
+    m_socket.bind(listenAddr);
+    m_channel.setReadCallback([this](ybase::Timestamp timestamp){
+        this->handleRead();
+    });
 }
 
 Acceptor::~Acceptor() {
@@ -39,7 +45,7 @@ void Acceptor::handleRead() {
 
     int connfd = m_socket.accept(&peerAddr);
     if(connfd >= 0){
-        if(m_ConnEstablishedCb) m_ConnEstablishedCb(m_socket.getFd(), peerAddr);
+        if(m_NewConnectionCb) m_NewConnectionCb(m_socket.getFd(), peerAddr);
         else SocketUtils::close(connfd);
     }else{
         LOG_SYSERR << "in Acceptor::handleRead";

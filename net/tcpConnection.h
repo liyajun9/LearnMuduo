@@ -28,15 +28,24 @@ public:
     TcpConnection(EventLoop* loop, std::string name, int sockfd, const InetAddress& localAddr, const InetAddress& peerAddr);
     ~TcpConnection();
 
-    void setConnUpOrDownCallback(ConnUpOrDownCallback cb) { m_connUpOrDownCb = std::move(cb); }
+    void setConnectionChangeCallback(ConnectionChangeCallback cb) { m_connectionChangeCb = std::move(cb); }
     void setCloseCallback(CloseCallback cb) { m_closeCb = std::move(cb); }
     void setMessageCallback(MessageCallback cb) { m_messageCb = std::move(cb); }
+    void setWriteCompleteCallback(WriteCompleteCallback cb) { m_writeCompleteCb = std::move(cb); }
+    void setHighWaterMarkCallback(HighWaterMarkCallback cb) { m_highWaterMarkCb = std::move(cb); }
 
     void connectionEstablished();//used to change state
     void connectionDestroyed();
 
     void setState(StateE state) { m_state = state; }
     StateE getState() const { return m_state; }
+    bool IsConnected() const { return m_state == CONNECTED; }
+    bool IsDisconnected() const { return m_state == DISCONNECTED; }
+
+    std::string getConnName() const { return m_connName; };
+    EventLoop* getLoop() const { return m_loop; }
+    InetAddress getLocalAddr() const { return m_localAddr; }
+    InetAddress getPeerAddr() const { return m_peerAddr; }
 
 private:
     /* pass to Channel::ReadEventCallback & EventCallback
@@ -46,6 +55,8 @@ private:
     void handleWrite();
     void handleClose();
     void handleError();
+
+    void shutdownInLoop(); //shutdown write
 
 private:
 
@@ -59,13 +70,15 @@ private:
     InetAddress m_localAddr;
     InetAddress m_peerAddr;
 
-    //Input Buffer & Output Buffer
-    Buffer m_inputBuf;
-    Buffer m_outputBuf;
+    //recv Buffer & send Buffer
+    Buffer m_recvBuf;
+    Buffer m_sendBuf;
 
-    ConnUpOrDownCallback m_connUpOrDownCb;
+    ConnectionChangeCallback m_connectionChangeCb;
     CloseCallback m_closeCb;
     MessageCallback m_messageCb;
+    WriteCompleteCallback m_writeCompleteCb;
+    HighWaterMarkCallback m_highWaterMarkCb;
 };
 
 } //namespace ynet

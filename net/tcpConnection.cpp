@@ -41,18 +41,12 @@ TcpConnection::~TcpConnection() {
     assert(m_state == DISCONNECTED);
 }
 
-void TcpConnection::connectionEstablished() {
-    m_loop->assertInCurrentThread();
-    assert(m_state == CONNECTING);
-    setState(CONNECTED);
-}
-
 void TcpConnection::handleRead(ybase::Timestamp recvTime) {
     m_loop->assertInCurrentThread();
     int savedErrno = 0;
-    ssize_t n = m_inputBuf.readFromFd(m_channel->getFd(), &savedErrno);
+    ssize_t n = m_recvBuf.readFromFd(m_channel->getFd(), &savedErrno);
     if(n > 0)
-        m_messageCb(shared_from_this(), &m_inputBuf, recvTime);
+        m_messageCb(shared_from_this(), &m_recvBuf, recvTime);
     else if(n == 0)
         handleClose();
     else{
@@ -65,9 +59,25 @@ void TcpConnection::handleRead(ybase::Timestamp recvTime) {
 void TcpConnection::handleWrite() {
     m_loop->assertInCurrentThread();
     if(m_channel->isWriting()){ //write only when you have data to send
-
+        ssize_t n = SocketUtils::write(m_channel->getFd(), m_sendBuf.getReadPos(), m_sendBuf.readableBytes());
+        if(n > 0){
+            m_sendBuf.retrieve(n);
+            if(m_sendBuf.readableBytes() == 0){
+                m_channel->disableWrite();
+                if(m_writeCompleteCb){
+                    m_loop->postTask_mt([this](){
+                        this->m_writeCompleteCb(this->shared_from_this());
+                    });
+                }
+                if(m_state == DISCONNECTING){
+                    shutdownInLoop();
+                }
+            }
+        }else{
+            LOG_SYSERR << "TcpConnection::handleWrite";
+        }
     }else{
-        LOG_SYSERR << "Connection fd = " << m_channel->getFd() << " is down, no more writing";
+        LOG_TRACE << "Connection fd = " << m_channel->getFd() << " is down, no more writing";
     }
 }
 
@@ -80,7 +90,7 @@ void TcpConnection::handleClose() {
     m_channel->disableAll();
 
     TcpConnectionPtr conn = shared_from_this(); //make this' life long enough until callbacks executed
-    m_connUpOrDownCb(conn);
+    m_connectionChangeCb(conn);
     m_closeCb(conn);
 }
 
@@ -89,14 +99,31 @@ void TcpConnection::handleError() {
     LOG_ERROR << "TcpConnection::handleError [" << m_connName << "] - SO_ERROR = " << err << " " << strerror(err);
 }
 
+void TcpConnection::connectionEstablished() {
+    m_loop->assertInCurrentThread();
+    assert(m_state == CONNECTING);
+    setState(CONNECTED);
+    m_channel->tie(shared_from_this()); //save shared_ptr<>(this) into channel
+    m_channel->enableRead();
+
+    m_connectionChangeCb(shared_from_this());
+}
+
 void TcpConnection::connectionDestroyed() {
     m_loop->assertInCurrentThread();
     if(m_state == CONNECTED){
         setState(DISCONNECTED);
         m_channel->disableAll();
-        m_connUpOrDownCb(shared_from_this());
+        m_connectionChangeCb(shared_from_this());
     }
     m_channel->remove();
+}
+
+void TcpConnection::shutdownInLoop() {
+    m_loop->assertInCurrentThread();
+    if(!m_channel->isWriting()){
+        m_socket->shutdownWrite();
+    }
 }
 
 

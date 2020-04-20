@@ -19,7 +19,7 @@ Channel::Channel(EventLoop *loop, int fd)
 
 }
 
-void Channel::handleEvents() {
+void Channel::handleEvents(ybase::Timestamp timestamp) {
     std::shared_ptr<void> connPtr;
     if(m_tied){
         connPtr = m_tie.lock();
@@ -35,7 +35,7 @@ void Channel::handleEvents() {
     }
     if(m_currEvents & (POLLIN | POLLPRI)){
         LOG_TRACE << "Channel::handle_events() POLLIN or POLLPRI";
-        if(m_readCb) m_readCb();
+        if(m_readCb) m_readCb(timestamp);
     }
     if(m_currEvents & POLLOUT){
         LOG_TRACE << "Channel::handle_events() POLLOUT";

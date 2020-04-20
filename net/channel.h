@@ -21,7 +21,7 @@ class Channel {
 public:
     Channel(EventLoop* loop, int fd);
 
-    void handleEvents();
+    void handleEvents(ybase::Timestamp timestamp);
 
     //any operation on events will invoke update to add channel to poll_fd
     void enableRead() { m_events |= ReadEvent;        update(); }

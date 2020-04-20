@@ -20,6 +20,8 @@ EventLoop::EventLoop()
 : m_looping(false)
 , m_threadId(ybase::ThreadUtils::getTid())
 , m_quit(false)
+, m_pollReturnTime()
+, m_handlingEvent(false)
 , m_timerQueue(new TimerQueue(this))
 , m_asyncTaskFd(ybase::SystemUtils::createEventfd())
 , m_asyncTaskChannel(new Channel(this, m_asyncTaskFd))
@@ -32,7 +34,7 @@ EventLoop::EventLoop()
     }
 
     //register wakeupFd
-    m_asyncTaskChannel->setReadCallback([this](){
+    m_asyncTaskChannel->setReadCallback([this](ybase::Timestamp timestamp){
         this->resetAsyncTaskEvent();
     });
     m_asyncTaskChannel->enableRead();
@@ -52,10 +54,14 @@ void EventLoop::loop() {
 
     while(!m_quit){
         m_activeIOChannels.clear();
-        m_poller->poll(1000, m_activeIOChannels);
-        for(auto channel : m_activeIOChannels){
-            channel->handleEvents();
+        m_pollReturnTime = m_poller->poll(1000, m_activeIOChannels);
+        m_handlingEvent = true;
+        for(Channel* channel : m_activeIOChannels){
+            m_currActiveChannel = channel;
+            m_currActiveChannel->handleEvents(m_pollReturnTime);
         }
+        m_currActiveChannel = nullptr;
+        m_handlingEvent = false;
         executeAsyncTasks();
     }
 
@@ -89,14 +95,14 @@ TimerId EventLoop::runEvery(double interval, TimerCallback &cb) {
     return m_timerQueue->addTimer_mt(cb, time, interval);
 }
 
-void EventLoop::postTask_mt(AsyncTask &cb) {
+void EventLoop::postTask_mt(AsyncTask cb) {
     if(isInLoopThread())
         cb();
     else
         queueTask(cb);
 }
 
-void EventLoop::queueTask(AsyncTask &cb) {
+void EventLoop::queueTask(AsyncTask cb) {
     {
         std::lock_guard<std::mutex> lock(m_mtx);
         m_asyncTaskList.push_back(std::move(cb));

@@ -23,10 +23,21 @@ public:
         return m_writePos - m_readPos;
     }
 
+    const char* getReadPos() const{
+        return begin() + m_readPos;
+    }
+
     size_t writableBytes() const{
         return m_vec.size() - m_writePos;
     }
 
+    char* getWritePos() const {
+        return const_cast<char *>(begin() + m_writePos);
+    }
+
+    /* write to Buffer
+     *
+     */
     void append(const void* data, int len){
         append(reinterpret_cast<const char*>(data), len);
     }
@@ -41,6 +52,9 @@ public:
 
     ssize_t readFromFd(int fd, int* savedError);
 
+    /* read from Buffer
+     *
+     */
     void retrieve(size_t len){
         assert(len <= readableBytes());
         if(len < readableBytes()){
