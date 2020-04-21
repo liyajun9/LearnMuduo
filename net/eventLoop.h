@@ -32,6 +32,7 @@ public:
     void quit_mt(); //quit loop, the suffix '_mt' means it's thread safe
     void updateChannel(Channel* channel);   //update channel for poll
     void removeChannel(Channel* channel);   //remove channel from poll
+    bool hasChannel(Channel* channel);
 
     /* set timer
      *
@@ -39,6 +40,7 @@ public:
     TimerId runAt(const ybase::Timestamp& time, TimerCallback& cb);
     TimerId runAfter(double delay, TimerCallback& cb);
     TimerId runEvery(double interval, TimerCallback& cb);
+    void cancelTimer(TimerId timerId);
 
     /* post tasks
      * 1.invoke from loop thread: execute task immediately
@@ -52,10 +54,15 @@ public:
     void assertInCurrentThread();
     bool isInLoopThread() const { return m_threadId != ybase::ThreadUtils::getTid(); }
 
+    size_t queue_size();
+    bool getHandlingEvent() const { return m_handlingEvent; }
+
 private:
     void executeAsyncTasks();
     void setAsyncTaskEvent();       //write to m_asyncTaskFd
     void resetAsyncTaskEvent();     //read from m_asyncTaskFd
+
+    void printActiveChannels() const;
 
 private:
     bool m_looping;

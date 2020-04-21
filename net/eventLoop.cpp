@@ -166,4 +166,25 @@ void EventLoop::removeChannel(Channel *channel) {
     m_poller->removeChannel(channel);
 }
 
+void EventLoop::cancelTimer(TimerId timerId) {
+    m_timerQueue->cancelTimer(timerId.m_sequence);
+}
+
+size_t EventLoop::queue_size() {
+    std::lock_guard<std::mutex> lock(m_mtx);
+    return m_asyncTaskList.size();
+}
+
+bool EventLoop::hasChannel(Channel *channel) {
+    assert(channel->getOwnerLoop() == this);
+    assertInCurrentThread();
+    return m_poller->hasChannel(channel);
+}
+
+void EventLoop::printActiveChannels() const{
+    for(const auto channel : m_activeIOChannels){
+        LOG_TRACE << "{" << channel->getFd() << "} ";
+    }
+}
+
 } //namespace ynet
