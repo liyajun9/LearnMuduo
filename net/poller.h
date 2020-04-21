@@ -22,18 +22,17 @@ public:
     explicit Poller(EventLoop* loop);
     ~Poller();
 
-    ybase::Timestamp poll(int timeoutMs, std::vector<Channel*>& activeChannels); //activeChannels = have events occurred
-    void updateChannel(Channel* channel);   //adding or modifying channel
-    void removeChannel(Channel* channel);   //removing channel
+    virtual ybase::Timestamp poll(int timeoutMs, std::vector<Channel*>& activeChannels) = 0; //activeChannels = have events occurred
+    virtual void updateChannel(Channel* channel) = 0;   //adding or modifying channel
+    virtual void removeChannel(Channel* channel) = 0;   //removing channel
+    virtual bool hasChannel(Channel* channel) const;
 
-private:
-    void fillActiveChannels(int numEvents, std::vector<Channel*>& activeChannels) const;
+protected:
+    virtual void fillActiveChannels(int numEvents, std::vector<Channel*>& activeChannels) const = 0;
 
     void assertInCurrentThread();
 
-private:
-    std::vector<Pollfd> m_pollfdList; //pollfdList correspondign to m_channelMap
-
+protected:
     std::map<int, Channel*> m_channelMap; //all updated(added) channels
     EventLoop* m_ownerLoop;
 };

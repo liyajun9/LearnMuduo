@@ -12,6 +12,8 @@
 
 #endif //LINUXSERVER_ALIAS_H
 
+struct pollfd;
+struct epoll_event;
 namespace ynet{
     class TcpConnection;
     class Buffer;
@@ -27,6 +29,7 @@ namespace ynet{
 
     //Poller
     using Pollfd = struct pollfd;
+    using EpollEvent = struct epoll_event;
 
     //Channerl
     using EventCallback = std::function<void()>;

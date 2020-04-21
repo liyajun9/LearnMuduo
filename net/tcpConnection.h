@@ -104,7 +104,7 @@ private:
     WriteCompleteCallback m_writeCompleteCb; //on sendBuf is empty
     HighWaterMarkCallback m_highWaterMarkCb; //on sendBuf > highWaterMark
 
-    static constexpr size_t m_highWaterMark = 64 * 1024 * 1024;
+    static constexpr size_t s_highWaterMark = 64 * 1024 * 1024;
 };
 
 } //namespace ynet

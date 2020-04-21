@@ -222,8 +222,8 @@ void TcpConnection::sendInLoop(const void *message, size_t len) {
 
         //highWaterMark: to avoid buffer full
         size_t oldLen = m_sendBuf.readableBytes();
-        if(oldLen + remain >= m_highWaterMark && oldLen < m_highWaterMark){
-            if(m_highWaterMark)
+        if(oldLen + remain >= s_highWaterMark && oldLen < s_highWaterMark){
+            if(s_highWaterMark)
                 m_loop->postTask_mt([this, oldLen, remain](){
                     this->m_highWaterMarkCb(this->shared_from_this(), oldLen + remain);
                 });
