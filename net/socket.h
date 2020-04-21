@@ -21,7 +21,7 @@ public:
     int accept(InetAddress* peerAddr);
     void shutdownWrite();
 
-    void setTcpNoDelay(bool on);
+    void setTcpNoDelay(bool on); //forbidden Nagle algo. to improve latency
     void setReuseAddr(bool on);
     void setReusePort(bool on);
     void setKeepAlive(bool on);

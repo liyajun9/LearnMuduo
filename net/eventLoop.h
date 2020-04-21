@@ -50,13 +50,12 @@ public:
     bool isLooping() const { return m_looping; }
     pid_t getThreadId() const { return m_threadId; }
     void assertInCurrentThread();
+    bool isInLoopThread() const { return m_threadId != ybase::ThreadUtils::getTid(); }
 
 private:
     void executeAsyncTasks();
     void setAsyncTaskEvent();       //write to m_asyncTaskFd
     void resetAsyncTaskEvent();     //read from m_asyncTaskFd
-
-    bool isInLoopThread() const { return m_threadId != ybase::ThreadUtils::getTid(); }
 
 private:
     bool m_looping;

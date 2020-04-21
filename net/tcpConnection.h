@@ -28,6 +28,19 @@ public:
     TcpConnection(EventLoop* loop, std::string name, int sockfd, const InetAddress& localAddr, const InetAddress& peerAddr);
     ~TcpConnection();
 
+    void send_mt(const std::string& message);
+    void send_mt(const void* message, int len);
+    void send_mt(const ybase::StringPiece& message);
+    void send_mt(Buffer* message);
+    void shutdown_mt();
+    void forceClose();
+    void forceCloseWithDelay(double seconds);
+
+    void setTcpNoDelay(bool on);
+    void startRead();
+    void stopRead();
+    bool isReading() const { return m_reading; }
+
     void setConnectionChangeCallback(ConnectionChangeCallback cb) { m_connectionChangeCb = std::move(cb); }
     void setCloseCallback(CloseCallback cb) { m_closeCb = std::move(cb); }
     void setMessageCallback(MessageCallback cb) { m_messageCb = std::move(cb); }
@@ -47,6 +60,10 @@ public:
     InetAddress getLocalAddr() const { return m_localAddr; }
     InetAddress getPeerAddr() const { return m_peerAddr; }
 
+    //advanced interface
+    Buffer* recvBuffer() { return &m_recvBuf; }
+    Buffer* sendBuffer() { return &m_sendBuf; }
+
 private:
     /* pass to Channel::ReadEventCallback & EventCallback
      *
@@ -56,13 +73,20 @@ private:
     void handleClose();
     void handleError();
 
+    void sendInLoop(const std::string& message);
+    void sendInLoop(const ybase::StringPiece& message);
+    void sendInLoop(const void *message, size_t len);
     void shutdownInLoop(); //shutdown write
+    void forceCloseInLoop();
+    void startReadInLoop();
+    void stopReadInLoop();
 
 private:
 
     EventLoop* m_loop;
     std::string m_connName;
     StateE m_state;
+    bool m_reading;
 
     //connection info
     std::unique_ptr<Socket> m_socket;
@@ -77,8 +101,10 @@ private:
     ConnectionChangeCallback m_connectionChangeCb;
     CloseCallback m_closeCb;
     MessageCallback m_messageCb;
-    WriteCompleteCallback m_writeCompleteCb;
-    HighWaterMarkCallback m_highWaterMarkCb;
+    WriteCompleteCallback m_writeCompleteCb; //on sendBuf is empty
+    HighWaterMarkCallback m_highWaterMarkCb; //on sendBuf > highWaterMark
+
+    static constexpr size_t m_highWaterMark = 64 * 1024 * 1024;
 };
 
 } //namespace ynet

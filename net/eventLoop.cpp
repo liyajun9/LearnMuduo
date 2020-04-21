@@ -3,6 +3,7 @@
 //
 
 #include <poll.h>
+#include <signal.h>
 #include "eventLoop.h"
 #include "../base/logging.h"
 #include "poller.h"
@@ -15,6 +16,15 @@ thread_local EventLoop* pLoopInThread = nullptr;
 EventLoop* getEventLoopOfCurrentThread(){
     return pLoopInThread;
 }
+
+//avoid process abort on SIG_PIPE
+class IgnoreSigPipe{
+public:
+    IgnoreSigPipe(){
+        ::signal(SIGPIPE, SIG_IGN);
+    }
+};
+IgnoreSigPipe ignoreSigPipe;
 
 EventLoop::EventLoop()
 : m_looping(false)
