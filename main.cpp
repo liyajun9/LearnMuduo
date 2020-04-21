@@ -10,6 +10,9 @@
 
 int main() {
 
+    char text[] = "1234";
+    std::cout << text << std::endl;
+
     auto func = [](){
         ynet::EventLoop loop;
         loop.loop();

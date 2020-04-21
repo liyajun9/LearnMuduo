@@ -6,9 +6,12 @@
 #define LINUXSERVER_ALIAS_H
 
 #endif //LINUXSERVER_ALIAS_H
+#include <functional>
 
 namespace ybase{
 
     using ThreadFunc = std::function<void()>;
+
+    using Task = std::function<void()>;
 
 } //namespace ybase
