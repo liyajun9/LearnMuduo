@@ -2,8 +2,8 @@
 // Created by ralph on 4/3/20.
 //
 
-#ifndef LINUXSERVER_COUNTDOWNLATCH_H
-#define LINUXSERVER_COUNTDOWNLATCH_H
+#ifndef LEARNMUDUO_COUNTDOWNLATCH_H
+#define LEARNMUDUO_COUNTDOWNLATCH_H
 
 #include <mutex>
 #include <condition_variable>
@@ -29,4 +29,4 @@ private:
 };
 
 }
-#endif //LINUXSERVER_COUNTDOWNLATCH_H
+#endif //LEARNMUDUO_COUNTDOWNLATCH_H

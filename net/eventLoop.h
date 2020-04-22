@@ -2,8 +2,8 @@
 // Created by ralph on 4/3/20.
 //
 
-#ifndef LINUXSERVER_EVENTLOOP_H
-#define LINUXSERVER_EVENTLOOP_H
+#ifndef LEARNMUDUO_EVENTLOOP_H
+#define LEARNMUDUO_EVENTLOOP_H
 
 #include <memory>
 #include <vector>
@@ -94,4 +94,4 @@ EventLoop* getEventLoopOfCurrentThread();
 }//namepace ynet
 
 
-#endif //LINUXSERVER_EVENTLOOP_H
+#endif //LEARNMUDUO_EVENTLOOP_H

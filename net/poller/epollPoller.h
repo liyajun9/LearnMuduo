@@ -2,8 +2,8 @@
 // Created by ralph on 4/21/20.
 //
 
-#ifndef LINUXSERVER_EPOLLPOLLER_H
-#define LINUXSERVER_EPOLLPOLLER_H
+#ifndef LEARNMUDUO_EPOLLPOLLER_H
+#define LEARNMUDUO_EPOLLPOLLER_H
 
 #include <sys/epoll.h>
 #include "../poller.h"
@@ -51,4 +51,4 @@ private:
 } //namespace ynet
 
 
-#endif //LINUXSERVER_EPOLLPOLLER_H
+#endif //LEARNMUDUO_EPOLLPOLLER_H

@@ -2,8 +2,8 @@
 // Created by ralph on 4/11/20.
 //
 
-#ifndef LINUXSERVER_CHANNEL_H
-#define LINUXSERVER_CHANNEL_H
+#ifndef LEARNMUDUO_CHANNEL_H
+#define LEARNMUDUO_CHANNEL_H
 
 #include <functional>
 #include <sys/poll.h>
@@ -76,4 +76,4 @@ private:
 };
 
 } //namespace ynet
-#endif //LINUXSERVER_CHANNEL_H
+#endif //LEARNMUDUO_CHANNEL_H

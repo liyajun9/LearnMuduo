@@ -1,5 +1,5 @@
-#ifndef LINUXSERVER__BASE_TYPES_H
-#define LINUXSERVER__BASE_TYPES_H
+#ifndef LEARNMUDUO__BASE_TYPES_H
+#define LEARNMUDUO__BASE_TYPES_H
 
 #include <cstdint>
 #include <cstring>
@@ -43,4 +43,4 @@ inline To down_cast(From* f)                     // so we only accept pointers
 
 }  // namespace ybase
 
-#endif  // LINUXSERVER_BASE_TYPES_H
+#endif  // LEARNMUDUO_BASE_TYPES_H

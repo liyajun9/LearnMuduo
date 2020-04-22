@@ -2,8 +2,8 @@
 // Created by ralph on 3/31/20.
 //
 
-#ifndef LINUXSERVER_ENDIAN_H
-#define LINUXSERVER_ENDIAN_H
+#ifndef LEARNMUDUO_ENDIAN_H
+#define LEARNMUDUO_ENDIAN_H
 
 #include <cstdint>
 #include <endian.h>
@@ -36,4 +36,4 @@ inline uint16_t networkToHost16(int16_t network16){
 }
 
 }
-#endif //LINUXSERVER_ENDIAN_H
+#endif //LEARNMUDUO_ENDIAN_H

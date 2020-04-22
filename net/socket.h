@@ -2,8 +2,8 @@
 // Created by ralph on 4/17/20.
 //
 
-#ifndef LINUXSERVER_SOCKET_H
-#define LINUXSERVER_SOCKET_H
+#ifndef LEARNMUDUO_SOCKET_H
+#define LEARNMUDUO_SOCKET_H
 
 #include <netinet/tcp.h>
 #include "inetAddress.h"
@@ -35,4 +35,4 @@ private:
 } //namespace ynet
 
 
-#endif //LINUXSERVER_SOCKET_H
+#endif //LEARNMUDUO_SOCKET_H

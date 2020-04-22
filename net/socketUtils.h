@@ -2,8 +2,8 @@
 // Created by ralph on 4/13/20.
 //
 
-#ifndef LINUXSERVER_SOCKETUTILS_H
-#define LINUXSERVER_SOCKETUTILS_H
+#ifndef LEARNMUDUO_SOCKETUTILS_H
+#define LEARNMUDUO_SOCKETUTILS_H
 
 #include <sys/uio.h>
 #include <sys/socket.h>
@@ -46,4 +46,4 @@ public:
 
 } //namespace ynet
 
-#endif //LINUXSERVER_SOCKETUTILS_H
+#endif //LEARNMUDUO_SOCKETUTILS_H

@@ -1,5 +1,5 @@
-#ifndef LINUXSERVER_BASE_LOGGING_H
-#define LINUXSERVER_BASE_LOGGING_H
+#ifndef LEARNMUDUO_BASE_LOGGING_H
+#define LEARNMUDUO_BASE_LOGGING_H
 
 #include "logStream.h"
 #include "timestamp.h"
@@ -151,4 +151,4 @@ T* CheckNotNull(Logger::SourceFile file, int line, const char *names, T* ptr)
 
 }  // namespace ybase
 
-#endif  // LINUXSERVER__BASE_LOGGING_H
+#endif  // LEARNMUDUO__BASE_LOGGING_H

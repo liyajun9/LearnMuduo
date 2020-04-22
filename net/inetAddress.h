@@ -2,8 +2,8 @@
 // Created by ralph on 4/17/20.
 //
 
-#ifndef LINUXSERVER_INETADDRESS_H
-#define LINUXSERVER_INETADDRESS_H
+#ifndef LEARNMUDUO_INETADDRESS_H
+#define LEARNMUDUO_INETADDRESS_H
 
 #include <netinet/in.h>
 #include "../base/stringPiece.h"
@@ -42,4 +42,4 @@ private:
 
 } //namespace ynet
 
-#endif //LINUXSERVER_INETADDRESS_H
+#endif //LEARNMUDUO_INETADDRESS_H

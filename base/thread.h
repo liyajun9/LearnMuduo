@@ -2,8 +2,8 @@
 // Created by ralph on 4/3/20.
 //
 
-#ifndef LINUXSERVER_THREAD_H
-#define LINUXSERVER_THREAD_H
+#ifndef LEARNMUDUO_THREAD_H
+#define LEARNMUDUO_THREAD_H
 
 #include <functional>
 #include <atomic>
@@ -42,4 +42,4 @@ private:
 };
 
 } //ybase
-#endif //LINUXSERVER_THREAD_H
+#endif //LEARNMUDUO_THREAD_H

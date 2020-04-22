@@ -2,8 +2,8 @@
 // Created by ralph on 4/11/20.
 //
 
-#ifndef LINUXSERVER_TIMER_H
-#define LINUXSERVER_TIMER_H
+#ifndef LEARNMUDUO_TIMER_H
+#define LEARNMUDUO_TIMER_H
 
 #include <functional>
 #include <atomic>
@@ -41,4 +41,4 @@ private:
 };
 
 } //namespace ynet
-#endif //LINUXSERVER_TIMER_H
+#endif //LEARNMUDUO_TIMER_H

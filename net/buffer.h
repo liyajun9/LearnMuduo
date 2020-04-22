@@ -2,8 +2,8 @@
 // Created by ralph on 3/28/20.
 //
 
-#ifndef LINUXSERVER_BUFFER_H
-#define LINUXSERVER_BUFFER_H
+#ifndef LEARNMUDUO_BUFFER_H
+#define LEARNMUDUO_BUFFER_H
 
 #include <vector>
 #include <assert.h>
@@ -106,4 +106,4 @@ private:
 
 
 
-#endif //LINUXSERVER_BUFFER_H
+#endif //LEARNMUDUO_BUFFER_H

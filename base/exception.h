@@ -2,8 +2,8 @@
 // Created by ralph on 4/4/20.
 //
 
-#ifndef LINUXSERVER_EXCEPTION_H
-#define LINUXSERVER_EXCEPTION_H
+#ifndef LEARNMUDUO_EXCEPTION_H
+#define LEARNMUDUO_EXCEPTION_H
 
 namespace ybase {
 
@@ -27,4 +27,4 @@ namespace ybase {
     };
 
 } //namespace ybase
-#endif //LINUXSERVER_EXCEPTION_H
+#endif //LEARNMUDUO_EXCEPTION_H

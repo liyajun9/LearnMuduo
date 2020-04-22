@@ -58,9 +58,9 @@ void ThreadPool::run(Task task) {
     if(m_threads.empty()){
         task();
     }else{
-        std::unique_lock<std::mutex>(m_mtx);
+        std::unique_lock<std::mutex> lock(m_mtx);
         while(isFull()){
-            m_notFull.wait(m_mtx);
+            m_notFull.wait(lock);
         }
         assert(!isFull());
 
@@ -112,7 +112,7 @@ Task ThreadPool::take() {
 }
 
 bool ThreadPool::isFull() const {
-    return false;
+    return m_maxQueueSize > 0 && m_taskQueue.size() >= m_maxQueueSize;
 }
 
 } //namespace ybase

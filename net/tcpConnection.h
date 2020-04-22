@@ -2,8 +2,8 @@
 // Created by ralph on 4/17/20.
 //
 
-#ifndef LINUXSERVER_TCPCONNECTION_H
-#define LINUXSERVER_TCPCONNECTION_H
+#ifndef LEARNMUDUO_TCPCONNECTION_H
+#define LEARNMUDUO_TCPCONNECTION_H
 
 
 #include "socket.h"
@@ -109,4 +109,4 @@ private:
 
 } //namespace ynet
 
-#endif //LINUXSERVER_TCPCONNECTION_H
+#endif //LEARNMUDUO_TCPCONNECTION_H

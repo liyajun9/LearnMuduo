@@ -2,8 +2,8 @@
 // Created by ralph on 4/11/20.
 //
 
-#ifndef LINUXSERVER_TIMERQUEUE_H
-#define LINUXSERVER_TIMERQUEUE_H
+#ifndef LEARNMUDUO_TIMERQUEUE_H
+#define LEARNMUDUO_TIMERQUEUE_H
 
 #include <memory>
 #include <set>
@@ -52,4 +52,4 @@ private:
 
 } //namespace ynet
 
-#endif //LINUXSERVER_TIMERQUEUE_H
+#endif //LEARNMUDUO_TIMERQUEUE_H

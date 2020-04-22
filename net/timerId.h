@@ -2,8 +2,8 @@
 // Created by ralph on 4/13/20.
 //
 
-#ifndef LINUXSERVER_TIMERID_H
-#define LINUXSERVER_TIMERID_H
+#ifndef LEARNMUDUO_TIMERID_H
+#define LEARNMUDUO_TIMERID_H
 
 #include <cstdint>
 
@@ -27,4 +27,4 @@ public:
 } //namespace ynet
 
 
-#endif //LINUXSERVER_TIMERID_H
+#endif //LEARNMUDUO_TIMERID_H

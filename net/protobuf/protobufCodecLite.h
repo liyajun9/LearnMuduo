@@ -2,8 +2,8 @@
 // Created by ralph on 4/21/20.
 //
 
-#ifndef LINUXSERVER_PROTOBUFCODECLITE_H
-#define LINUXSERVER_PROTOBUFCODECLITE_H
+#ifndef LEARNMUDUO_PROTOBUFCODECLITE_H
+#define LEARNMUDUO_PROTOBUFCODECLITE_H
 
 namespace ynet {
 
@@ -20,4 +20,4 @@ public:
 };
 
 } //namespace ynet
-#endif //LINUXSERVER_PROTOBUFCODECLITE_H
+#endif //LEARNMUDUO_PROTOBUFCODECLITE_H

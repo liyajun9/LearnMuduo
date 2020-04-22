@@ -2,8 +2,8 @@
 // Created by ralph on 4/17/20.
 //
 
-#ifndef LINUXSERVER_ACCEPTOR_H
-#define LINUXSERVER_ACCEPTOR_H
+#ifndef LEARNMUDUO_ACCEPTOR_H
+#define LEARNMUDUO_ACCEPTOR_H
 
 #include "socket.h"
 #include "channel.h"
@@ -36,4 +36,4 @@ private:
 };
 
 } //namespace ynet
-#endif //LINUXSERVER_ACCEPTOR_H
+#endif //LEARNMUDUO_ACCEPTOR_H

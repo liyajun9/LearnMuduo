@@ -2,8 +2,8 @@
 // Created by ralph on 4/20/20.
 //
 
-#ifndef LINUXSERVER_EVENTLOOPTHREADPOOL_H
-#define LINUXSERVER_EVENTLOOPTHREADPOOL_H
+#ifndef LEARNMUDUO_EVENTLOOPTHREADPOOL_H
+#define LEARNMUDUO_EVENTLOOPTHREADPOOL_H
 
 #include <memory>
 #include <vector>
@@ -43,4 +43,4 @@ private:
 
 } //namespace ynet
 
-#endif //LINUXSERVER_EVENTLOOPTHREADPOOL_H
+#endif //LEARNMUDUO_EVENTLOOPTHREADPOOL_H

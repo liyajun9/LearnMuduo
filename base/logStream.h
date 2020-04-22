@@ -1,5 +1,5 @@
-#ifndef LINUXSERVER_BASE_LOGSTREAM_H
-#define LINUXSERVER_BASE_LOGSTREAM_H
+#ifndef LEARNMUDUO_BASE_LOGSTREAM_H
+#define LEARNMUDUO_BASE_LOGSTREAM_H
 
 #include "stringPiece.h"
 #include "typeUtils.h"
@@ -189,4 +189,4 @@ inline LogStream& operator<<(LogStream& s, const Fmt& fmt)
 
 }  // namespace ybase
 
-#endif  // LINUXSERVER_BASE_LOGSTREAM_H
+#endif  // LEARNMUDUO_BASE_LOGSTREAM_H

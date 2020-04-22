@@ -2,8 +2,8 @@
 // Created by ralph on 4/4/20.
 //
 
-#ifndef LINUXSERVER_THREADUTILS_H
-#define LINUXSERVER_THREADUTILS_H
+#ifndef LEARNMUDUO_THREADUTILS_H
+#define LEARNMUDUO_THREADUTILS_H
 
 #include <cassert>
 
@@ -64,4 +64,4 @@ private:
 
 
 
-#endif //LINUXSERVER_THREADUTILS_H
+#endif //LEARNMUDUO_THREADUTILS_H

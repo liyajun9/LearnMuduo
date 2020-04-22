@@ -2,8 +2,8 @@
 // Created by ralph on 4/14/20.
 //
 
-#ifndef LINUXSERVER_EVENTLOOPTHREAD_H
-#define LINUXSERVER_EVENTLOOPTHREAD_H
+#ifndef LEARNMUDUO_EVENTLOOPTHREAD_H
+#define LEARNMUDUO_EVENTLOOPTHREAD_H
 
 #include "eventLoop.h"
 #include "../base/thread.h"
@@ -36,4 +36,4 @@ private:
 
 } //namespace ynet
 
-#endif //LINUXSERVER_EVENTLOOPTHREAD_H
+#endif //LEARNMUDUO_EVENTLOOPTHREAD_H

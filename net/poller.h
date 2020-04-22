@@ -2,8 +2,8 @@
 // Created by ralph on 4/11/20.
 //
 
-#ifndef LINUXSERVER_POLLER_H
-#define LINUXSERVER_POLLER_H
+#ifndef LEARNMUDUO_POLLER_H
+#define LEARNMUDUO_POLLER_H
 
 #include <vector>
 #include <map>
@@ -38,4 +38,4 @@ protected:
 };
 
 } //namespace ynet
-#endif //LINUXSERVER_POLLER_H
+#endif //LEARNMUDUO_POLLER_H
