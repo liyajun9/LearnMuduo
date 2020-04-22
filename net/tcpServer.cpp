@@ -56,7 +56,7 @@ void TcpServer::start() {
 void TcpServer::defaultConnectionChangedCallback(const TcpConnectionPtr& conn) {
     LOG_TRACE << conn->getLocalAddr().toIpPort() << " -> "
               << conn->getPeerAddr().toIpPort() << " is "
-              << (conn->IsConnected() ? "UP" : "DOWN");
+              << (conn->isConnected() ? "UP" : "DOWN");
 }
 
 void TcpServer::defaultMessageCallback(const TcpConnectionPtr &conn, Buffer *buf, ybase::Timestamp) {

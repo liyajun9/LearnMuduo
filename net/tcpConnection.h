@@ -52,8 +52,8 @@ public:
 
     void setState(StateE state) { m_state = state; }
     StateE getState() const { return m_state; }
-    bool IsConnected() const { return m_state == CONNECTED; }
-    bool IsDisconnected() const { return m_state == DISCONNECTED; }
+    bool isConnected() const { return m_state == CONNECTED; }
+    bool isDisconnected() const { return m_state == DISCONNECTED; }
 
     std::string getConnName() const { return m_connName; };
     EventLoop* getLoop() const { return m_loop; }

@@ -7,6 +7,8 @@
 
 #include <vector>
 #include <assert.h>
+#include <cstring>
+#include "endian.h"
 
 namespace ynet{
 
@@ -38,6 +40,11 @@ public:
     /* write to Buffer
      *
      */
+    void appendInt32(int32_t x){
+        int32_t be32 = hostToNetwork32(x);
+        append(&be32, sizeof(be32));
+    }
+
     void append(const void* data, int len){
         append(reinterpret_cast<const char*>(data), len);
     }
@@ -51,6 +58,11 @@ public:
     }
 
     ssize_t readFromFd(int fd, int* savedError);
+
+    void hasWritten(size_t len){
+        assert(len <= writableBytes());
+        m_writePos += len;
+    }
 
     /* read from Buffer
      *
@@ -69,13 +81,14 @@ public:
         m_writePos = 0;
     }
 
-private:
-    char* begin(){
-        return &m_vec[0];
-    }
-
-    const char* begin() const{
-        return &m_vec[0];
+    /* peek from Buffer
+     *
+     */
+    int32_t peekInt32() const {
+        assert(readableBytes() >= sizeof(int32_t));
+        int32_t be32 = 0;
+        ::memcpy(&be32, getReadPos(), sizeof(be32));
+        return networkToHost32(be32);
     }
 
     void ensureSpace(size_t len){
@@ -84,6 +97,15 @@ private:
         else
             makeSpace(len);
         assert(len <= writableBytes());
+    }
+
+private:
+    char* begin(){
+        return &m_vec[0];
+    }
+
+    const char* begin() const{
+        return &m_vec[0];
     }
 
     void makeSpace(size_t len){
